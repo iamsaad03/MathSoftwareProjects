@@ -1,0 +1,576 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,scrextend}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\usepackage{subcaption}
+\usepackage{pgfplots}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{colortbl}
+
+\renewcommand{\arraystretch}{1.8}
+% Algorithm environment
+\usepackage[linesnumbered, ruled, vlined]{algorithm2e}
+\usepackage[hidelinks]{hyperref} 
+\usetikzlibrary{arrows.meta,shapes.geometric,automata,positioning,shadows}
+
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\qed}{\hfill$\blacksquare$}
+\let\newproof\proof
+\renewenvironment{proof}{\begin{addmargin}[1em]{0em}\end{addmargin}\qed}
+% \newcommand{\expl}[1]{\text{\hfill[#1]}$}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+	
+\begin{document}
+\begin{titlepage}
+	\centering
+	
+	% Optional: university logo
+	% \includegraphics[width=0.2\textwidth]{logo.png}\par\vspace{1cm}
+	
+	{\scshape\LARGE Amirkabir University of Technology \par}
+	\vspace{1cm}
+	{\huge\bfseries Advanced Calculus and Algorithms \par}
+	\vspace{0.5cm}
+	{\Large\itshape \par}
+	\vspace{1.5cm}
+	
+	{\large Saad Mollaei \par}
+	\vspace{0.5cm}
+	{\large Math and Computer Science Department \par}
+	\vspace{1cm}
+	
+	{\large \today \par}
+	
+	\vfill
+	
+	% Bottom of the page
+	{\small Course: Mathematics Software taught by Amin Hosseingholizadeh}
+\end{titlepage}
+
+
+\tableofcontents
+\newpage
+\section{Types of Convergences}
+in the table~\ref{table1} six types of convergences are compared.
+\begin{table}[ht]
+	\centering
+	
+	\arrayrulewidth=1pt
+	
+	\rowcolors{2}{cyan!10}{white}
+	
+	\begin{tabular}{
+			|>{\centering\arraybackslash}m{3cm}
+			!{\color{red}\vrule width 2pt}
+			>{\centering\arraybackslash}m{3cm}
+			|>{\centering\arraybackslash}m{4cm}|
+		}
+		\arrayrulecolor{blue}
+		\specialrule{2pt}{0pt}{0pt}
+		
+		\rowcolor{cyan!20}
+		\textbf{Type} &
+		\textbf{Definition} &
+		\textbf{Short Explanation}
+		\\
+		
+		\arrayrulecolor{black}
+		Pointwise &
+		$f_n(x)\to f(x)$ for every $x$ &
+		Each point converges independently.
+		\\
+		
+		Uniform &
+		$\sup_x |f_n(x)-f(x)|\to 0$ &
+		Same convergence rate on the whole domain.
+		\\
+		
+		Almost Everywhere &
+		$f_n(x)\to f(x)$ except on a set of measure zero &
+		Failure is allowed on negligible sets.
+		\\
+		
+		In Measure &
+		$\mu(\{|f_n-f|>\varepsilon\})\to 0$ &
+		Large errors become increasingly rare.
+		\\
+		
+		$L^p$ Convergence &
+		$\|f_n-f\|_p\to 0$ &
+		Average error measured by the $p$-norm vanishes.
+		\\
+		
+		Weak Convergence &
+		$\ell(f_n)\to \ell(f)$ for all continuous linear functionals $\ell$
+		&
+		Convergence is tested through functionals.
+		\\
+		
+		\bottomrule
+	\end{tabular}
+	
+	\caption{Comparison of Different Types of Convergence}\label{table1}
+\end{table}
+\newpage
+	% --------------------------------------------------------------
+	%                         Start here
+	% --------------------------------------------------------------
+	
+
+	\section{Norm Problem}
+	\quad \newline
+	$A\in\boldsymbol{M_{n\times n}(\R)}$ \newline
+	$\lambda \in \boldsymbol{\R}$ \newline
+	\\
+	$\Arrowvert A \Arrowvert _{op} < \,\, \arrowvert \lambda \arrowvert$ \newline
+	\\
+	We multiply both sides by the norm of an arbitrary element of $\R ^n$. \newline
+	$\Arrowvert A \Arrowvert _{op} \, \Arrowvert v \Arrowvert < \,\, \arrowvert \lambda \arrowvert \, \Arrowvert v \Arrowvert \,\,\,\, for \,\, all \,\, nonzero \,\, v \in \R^{n}$ \newline
+	\\ 
+	Knowing \quad $\Arrowvert Ax \Arrowvert \leq \Arrowvert A \Arrowvert _{op} \Arrowvert x \Arrowvert \thickspace\thickspace\thickspace \forall x \in \R ^{n}  $    \quad   we get the following, \newline
+	Thus, $A-\lambda I_n$ is invertible.
+	\newline
+	Because otherwise $\lambda$ would be an eigenvalue for $A$; \newline
+	meaning, $\Arrowvert Av \Arrowvert = \arrowvert \lambda \arrowvert \, \Arrowvert v \Arrowvert \,\,\,\, for \,\, some \,\, nonzero \,\, v \in \R^{n} $, contradicting line ($\star$).\\
+	\subsection{Representing The Norm Problem Using Automata}
+	\begin{tikzpicture} [->,>={Stealth[round]},shorten >=1pt,auto,node distance=2.8cm,on grid,semithick,
+		every state/.style={fill=red,draw=none,circular drop shadow,text=white}]
+		
+		\node[initial,state] (A)                    {$q_a$};
+		\node[state]         (B) [above right=of A] {$q_b$};
+		\node[state]         (D) [below right=of A] {$q_d$};
+		\node[state]         (C) [below right=of B] {$q_c$};
+		\node[state]         (E) [below=of D]       {$q_e$};
+		
+		\path (A) edge              node {0,1,L} (B)
+		edge              node {1,1,R} (C)
+		(B) edge [loop above] node {1,1,L} (B)
+		edge              node {0,1,L} (C)
+		(C) edge              node {0,1,L} (D)
+		edge [bend left]  node {1,0,R} (E)
+		(D) edge [loop below] node {1,1,R} (D)
+		edge              node {0,1,R} (A)
+		(E) edge [bend left]  node {1,0,R} (A);
+		
+		\node [right=1cm,text width=8cm] at (C)
+		{
+			The current candidate for the busy beaver for five states. It is
+			presumed that this Turing machine writes a maximum number of
+			$1$'s before halting among all Turing machines with five states
+			and the tape alphabet $\{0, 1\}$. Proving this conjecture is an
+			open research problem.
+		};
+	\end{tikzpicture}
+	
+	\phantom{a}\hfill$\blacksquare$ \newline
+	
+	
+	
+	
+
+	\newpage
+	\section{Calculus Concepts Illustrated}
+	
+	The following figure presents two fundamental ideas in calculus. 
+	Subfigure~\ref{fig:tangent} shows the tangent line to the parabola \(f(x)=x^2\) at \(x=1\), representing the derivative \(f'(1)=2\). 
+	Subfigure~\ref{fig:area} illustrates the definite integral \(\int_{0}^{1} x^2 \,dx\) as the area under the same curve from \(x=0\) to \(x=1\).
+	
+	\begin{figure}[htbp]
+		\centering
+		
+		% Subfigure (a): Derivative / Tangent line
+		\begin{subfigure}[b]{0.48\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\begin{axis}[
+					axis lines = middle,
+					xlabel = \(x\),
+					ylabel = \(y\),
+					xmin = -0.5, xmax = 2.2,
+					ymin = -0.5, ymax = 2.5,
+					xtick = {0,1,2},
+					ytick = {0,1,2},
+					grid = both,
+					minor tick num = 1,
+					legend style = {at={(0.05,0.95)}, anchor=north west},
+					width = \textwidth,
+					height = 0.75\textwidth,
+					]
+					% Plot f(x) = x^2
+					\addplot[domain=-0.5:2, thick, blue] {x^2};
+					\addlegendentry{\(f(x)=x^2\)}
+					
+					% Tangent line at x=1: slope 2, passes through (1,1) => y = 2x - 1
+					\addplot[domain=0:1.8, thick, red] {2*x - 1};
+					\addlegendentry{Tangent at \(x=1\): \(y=2x-1\)}
+					
+					% Mark the point of tangency
+					\addplot[only marks, mark=*, mark size=2pt, black] coordinates {(1,1)};
+				\end{axis}
+			\end{tikzpicture}
+			\caption{Derivative as the slope of the tangent line: for \(f(x)=x^2\), \(f'(1)=2\).}
+			\label{fig:tangent}
+		\end{subfigure}
+		\hfill
+		% Subfigure (b): Definite integral / Area under curve
+		\begin{subfigure}[b]{0.48\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\begin{axis}[
+					axis lines = middle,
+					xlabel = \(x\),
+					ylabel = \(y\),
+					xmin = -0.2, xmax = 1.2,
+					ymin = -0.2, ymax = 1.2,
+					xtick = {0,1},
+					ytick = {0,1},
+					grid = both,
+					minor tick num = 1,
+					legend style = {at={(0.05,0.95)}, anchor=north west},
+					width = \textwidth,
+					height = 0.75\textwidth,
+					]
+					% Plot f(x) = x^2
+					\addplot[domain=-0.2:1.2, thick, blue] {x^2};
+					\addlegendentry{\(f(x)=x^2\)}
+					
+					% Fill area under curve from 0 to 1
+					\addplot[domain=0:1, fill=cyan!30, fill opacity=0.5, draw=none] {x^2} \closedcycle;
+					
+					% Optional: add vertical lines at bounds for clarity
+					\draw[dashed] (axis cs:0,0) -- (axis cs:0,{0^2});
+					\draw[dashed] (axis cs:1,0) -- (axis cs:1,1);
+				\end{axis}
+			\end{tikzpicture}
+			\caption{Definite integral as area under the curve: \(\int_{0}^{1} x^2 \,dx = \frac{1}{3}\).}
+			\label{fig:area}
+		\end{subfigure}
+		
+		\caption{Calculus illustrated: derivative (left) and definite integral (right).}
+		\label{fig:calculus}
+	\end{figure}
+	
+	As seen in Figure~\ref{fig:tangent}, the derivative gives the instantaneous rate of change; the slope of the tangent line at \((1,1)\) is \(2\). 
+	Meanwhile, Figure~\ref{fig:area} visualizes the accumulation of area under \(f(x)=x^2\) from \(0\) to \(1\), which evaluates to \(\frac{1}{3}\). 
+	Together, these subfigures capture the essence of differential and integral calculus.
+\newpage
+\section{Euclid's Algorithm GCD\cite{hardy}}
+
+Euclid's algorithm computes the GCD of two positive integers. The algorithm works by repeatedly replacing the larger number with the remainder of dividing the larger by the smaller, until the remainder becomes zero. The last non‑zero remainder is the GCD.
+
+\subsection{The Algorithm}
+
+\begin{algorithm}[H]
+	\SetAlgoLined
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	
+	\Input{Two positive integers \(a\) and \(b\)}
+	\Output{\(\gcd(a,b)\)}
+	
+	\BlankLine
+	
+	\While{\(b \neq 0\)}{ \label{step:loop}
+		\(r \leftarrow a \bmod b\) \label{step:mod}\;
+		\(a \leftarrow b\) \label{step:assignA}\;
+		\(b \leftarrow r\) \label{step:assignB}\;
+	}
+	
+	\KwRet{\(a\)} \label{step:return}
+	
+	\caption{Euclid's algorithm (remainder version)}
+	\label{alg:euclid}
+\end{algorithm}
+
+\subsection{Explanation}
+
+The algorithm proceeds as follows:
+\begin{itemize}
+	\item The \textbf{loop condition} (line~\ref{step:loop}) checks whether \(b\) is zero. If \(b=0\), the algorithm exits and returns \(a\) as the GCD (line~\ref{step:return}).
+	\item Inside the loop, we compute the remainder \(r = a \bmod b\) (line~\ref{step:mod}), then update \(a\) to the old value of \(b\) (line~\ref{step:assignA}), and finally set \(b\) to the remainder \(r\) (line~\ref{step:assignB}).
+	\item This process reduces the pair \((a,b)\) to \((b, a \bmod b)\), which preserves the GCD. The loop repeats until the remainder is zero.
+\end{itemize}
+
+For example, computing \(\gcd(48, 18)\):  
+\(48 \bmod 18 = 12\) → new pair \((18,12)\);  
+\(18 \bmod 12 = 6\) → new pair \((12,6)\);  
+\(12 \bmod 6 = 0\) → new pair \((6,0)\); loop ends, returns \(6\).
+\newpage
+\subsection{Flowchart of Euclid's Algorithm}
+
+Figure~\ref{fig:flowchart} shows the same logic as a flowchart, with each step corresponding directly to the numbered lines in Algorithm~\ref{alg:euclid}.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[
+		node distance = 1.2cm and 1.5cm,
+		startstop/.style = {rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=red!20},
+		process/.style = {rectangle, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10},
+		decision/.style = {diamond, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=green!10},
+		arrow/.style = {thick, ->, >=stealth}
+		]
+		
+		% Nodes
+		\node (start) [startstop] {Start};
+		\node (input) [process, below of=start] {Input \(a, b\)};
+		\node (decision) [decision, below of=input] {\(b \neq 0\) ?};
+		\node (mod) [process, below left of=decision, xshift=-1.5cm] {\(r = a \bmod b\)};
+		\node (assignA) [process, below of=mod] {\(a = b\)};
+		\node (assignB) [process, below of=assignA] {\(b = r\)};
+		\node (return) [process, below right of=decision, xshift=1.5cm] {Return \(a\) (GCD)};
+		\node (stop) [startstop, below of=return] {End};
+		
+		% Arrows
+		\draw [arrow] (start) -- (input);
+		\draw [arrow] (input) -- (decision);
+		
+		% Loop branch (b != 0)
+		\draw [arrow] (decision) -- node[anchor=south east] {Yes} (mod);
+		\draw [arrow] (mod) -- (assignA);
+		\draw [arrow] (assignA) -- (assignB);
+		\draw [arrow] (assignB) -- ++(2.5,0) -- ++(0,3.2) -- (decision);
+		
+		% Exit branch (b == 0)
+		\draw [arrow] (decision) -- node[anchor=south west] {No} (return);
+		\draw [arrow] (return) -- (stop);
+		
+	\end{tikzpicture}
+	\caption{Flowchart of Euclid's algorithm. The loop (Yes branch) corresponds to lines~\ref{step:loop} to~\ref{step:assignB} in Algorithm~\ref{alg:euclid}. The exit branch (No) returns the GCD as in line~\ref{step:return}.}
+	\label{fig:flowchart}
+\end{figure}
+
+The flowchart makes the iteration explicit: after updating \(a\) and \(b\), the control loops back to the condition \(b \neq 0\), exactly as the \texttt{while} loop does in the algorithm.
+\newpage
+	
+\section{Examining Unboundedness of The Space}
+	
+	
+	$V=P[0,1]$ is the space of polynomials from [0,1] to $ \R $. \newline
+	$T:V\rightarrow V$ \quad $T(P)=P^\prime$ \quad is the linear differentiation function. \newline
+	And the norm used here is the supnorm. \newline
+	\quad \newline
+	$A= \left\{ x^n|n\in \N\right\} \subset V$ \vspace{5pt} \\
+	\phantom{\quad \, \,}$\Arrowvert x^n \Arrowvert = 1 \, \, \, \forall n \in \N$ \quad thus A is in the closed unit ball. ($\star$) \newline
+	\quad \newline
+	$T(A)=\left\{nx^{n-1}|n\in \N \right\}$ \, is unbounded. \vspace{5pt} \\
+	\phantom{\quad \, \,} $\because \, \, \, \forall M \in \R$ \quad 
+	$ \Arrowvert \left( \lfloor M \rfloor +1 \right) x^{ \lfloor M \rfloor } \Arrowvert  = \lfloor M \rfloor +1 > M $ \newline
+	\quad \newline
+	Thus $T$ is unbounded;
+	in particular since ($\star$) holds, we get that $T$ is unbounded on the closed unit ball. \newline
+	Now by Theorem 2.2.5 presented on page 116 of the book by Apostol\cite{apostol}, the continuity of $T$ is disproved.\hfill$\blacksquare$ \newline
+	\quad	 \newline
+	\newline
+	\subsection{Discontinuity}
+	We'll prove discontinuity for $p_{\text{\tiny{0}}} = 0 $ explicitly. \newline
+	\newline
+	Writing the $\epsilon $-$ \delta $ definition for the continuity of $p_{\text{\tiny{0}}} = 0 $, \newline
+	\phantom{\quad \, \,} $ \forall \epsilon >0 \quad \exists \delta>0 $ \quad
+	$\forall p \in V$ \quad
+	$ \Arrowvert p \Arrowvert < \delta \rightarrow \Arrowvert T(p) \Arrowvert < \epsilon $ \quad \newline
+	negating it, \newline
+	\phantom{\quad \, \,} $ \exists \epsilon>0 \quad  \forall \delta>0
+	$ \quad $\exists p \in V$ \quad $ \Arrowvert p \Arrowvert < \delta \, \, \, \wedge \, \, \,
+	 \Arrowvert T(p) \Arrowvert \geq \epsilon $ \quad \newline \newline
+	 Choose $\epsilon = \frac{1}{2} $ , $p=\frac{x^{n+1}}{n+1}$ taking $n$ so big that $\frac{1}{n+1} < \delta$ \newline
+	 substituting, \quad $ \Arrowvert p \Arrowvert = \frac{1}{n+1} < \delta \, \, \, \text{and} \, \, \,
+	 \Arrowvert T(p) \Arrowvert = \Arrowvert x^n \Arrowvert = 1 \geq \frac{1}{2} = \epsilon $ \hfill$\blacksquare$ \newline
+	 \quad \newline \newline
+	 Now the sequential definition. \vspace{5pt} \\
+	 $\left\{ \frac{x^{n+1}}{n+1} \right\}$ uniformly converges to 0. 
+	 \vspace{5pt} \ \\
+	 $\left\{ T\left( \frac{x^{n+1}}{n+1} \right)  \right\} = 
+	 \left\{ x^n  \right\} $ does not even converge. 
+	 \vspace{5pt} \ \\ \phantom{\quad \, \,}  $\because$\,(informal) For any large n, you can get $x^n$ as close as you want to 1. \hfill$\blacksquare$ \newline
+ 
+ 
+ \subsection{Parallelogram Law}
+	Any norm induced by an inner product satisfies the Parallelogram law\cite{hardy}.
+	\begin{align*}
+		Proof.    \quad \quad \quad \quad  \quad \phantom{=} \\
+		\|x + y\|^2 + \|x - y\|^2 
+		&= \langle x + y, x + y \rangle + \langle x - y, x - y \rangle && \text{Definition of Inner Product Norm} \\
+		&= \langle x, x \rangle + \langle x, y \rangle + \langle y, x \rangle + \langle y, y \rangle \\
+		&\quad + \langle x, x \rangle - \langle x, y \rangle - \langle y, x \rangle + \langle y, y \rangle && \text{Bilinearity of Inner Product} \\
+		&= 2 \langle x, x \rangle + 2 \langle y, y \rangle \\
+		&= 2 \left( \|x\|^2 + \|y\|^2 \right) && \text{Definition of Inner Product Norm}
+		\end{align*}
+	\vspace{5pt} \\
+	$\Arrowvert x_n\Arrowvert \leq1$ , 
+	$\Arrowvert y_n\Arrowvert \leq1$ ,
+	$\lim\limits_{n\rightarrow \infty} \Arrowvert x_n+y_n\Arrowvert =2$
+	\vspace{5pt} \\
+	By applying the two inequalities to 
+	$\|x_n + y_n\|^2 + \|x_n - y_n\|^2=2 \left( \|x_n\|^2 + \|y_n\|^2 \right)$, \vspace{5pt} \\
+	we get that, \quad
+	$\|x_n + y_n\|^2 + \|x_n - y_n\|^2 \leq 4$ \vspace{5pt} \\
+now onto the problem, \\
+	$0 \leq \|x_n - y_n\|^2 \leq \left({4 - \|x_n + y_n\|^2}\right)$ \vspace{5pt} \\
+	$0 \leq \|x_n - y_n\| \leq \sqrt{4 - \|x_n + y_n\|^2}$ \vspace{5pt} \\
+	$0 \leq \lim\limits_{n\rightarrow \infty} \|x_n - y_n\| \leq \lim\limits_{n\rightarrow \infty} \sqrt{4 - \|x_n + y_n\|^2} $ \quad \quad \quad \phantom{s.\tiny{..}} \, $\because$ \,\, The Sandwich Theorem \vspace{5pt} \\
+	$ \lim\limits_{n\rightarrow \infty} \sqrt{4 - \|x_n + y_n\|^2} =  \sqrt{4 - \left({\lim\limits_{n\rightarrow \infty}\|x_n + y_n\|}\right)^2}=0$
+	 \,\, $\because$ \,\,  $0\leq\Arrowvert x_n+y_n\Arrowvert \leq 
+	\Arrowvert x_n\Arrowvert + \Arrowvert y_n\Arrowvert \leq 2$
+	 \vspace{5pt} \\
+	$ \therefore \, \, \lim\limits_{n\rightarrow \infty} \|x_n - y_n\| = 0$  \\
+	\phantom{a} \hfill$\blacksquare$
+	
+	\newpage
+	
+	\subsection{The Dual Norm}
+	Definition of the "Dual norm"\cite{apostol} with respect to the normed space
+	$\left(V,\Arrowvert.\Arrowvert\right)$ \,:  \\
+	$f\in V^\star \quad\quad \Arrowvert f \Arrowvert^\star =max\left\{|f\left(x\right)| \,\, : \,\, \Arrowvert x \Arrowvert = 1 \right\}$ \\
+	\\ 
+	Take the normed space to be $\left(\R ^n , \Arrowvert.\Arrowvert _1\right)$ , \\
+	$ \Arrowvert \left(x_1,x_2,...,x_n\right) \Arrowvert_1 =  \sum\limits_{i=1}^{n}|x_i|$ \,,
+	\\
+	$e_1, e_2, ..., e_n \,\,$ the standard basis\\
+	and $\phi_1 , \phi_2 , ... , \phi_n$ the standard dual basis.
+	\\
+	\\
+	\begin{align*}
+		f &\in (\mathbb{R}^n)^\star = \mathcal{L}(\mathbb{R}^n,\mathbb{R})
+		\quad \text{        so,} \,\,\,
+		f = \sum_{i=1}^{n} a_i \phi_i,
+		\\[6pt]
+		\|f\|_1^\star
+		&=
+		\max\left\{
+		\left|
+		\sum_{i=1}^{n} a_i \phi_i(x)
+		\right|
+		:\,
+		\|x\|_1=1
+		\right\}
+		\\
+		&=
+		\max\left\{
+		\left|
+		\sum_{i=1}^{n} a_i x_i
+		\right|
+		:\,
+		\sum_{i=1}^{n}|x_i|=1
+		\right\},
+		\\[6pt]
+		\left|
+		\sum_{i=1}^{n} a_i x_i
+		\right|
+		&\le
+		\sum_{i=1}^{n}|a_i x_i|
+		\le
+		\sum_{i=1}^{n}|a_i|\,|x_i|
+		\le
+		\sum_{i=1}^{n} M|x_i|
+		= M,
+		\\[6pt]
+		\text{where}\qquad
+		M
+		&=
+		\max\left\{
+		|a_i|
+		:\,
+		i\in\{1,2,\ldots,n\}
+		\right\}
+		\\
+		&=
+		|a_k|
+		\qquad
+		\text{for some }
+		k\in\{1,2,\ldots,n\}.
+	\end{align*}
+	Now by choosing $x_k=1$ and all other x's to be 0, we can get as high as M. \vspace{5pt} \\
+	thus, $\Arrowvert f \Arrowvert^\star_1 =M= |a_k|= \Arrowvert \left(a_1,a_2,...,a_n\right) \Arrowvert_{max} $ \\
+		\\
+	\phantom{a}\hfill$\blacksquare$
+	
+	\subsubsection{Exponential Case}
+
+	
+	
+	We want to show that there does not exist a real matrix \( A \in \mathbb{R}^{2 \times 2} \) such that its exponential is:
+	
+	\[
+	e^A = \begin{pmatrix} -1 & 0 \\ 0 & -4 \end{pmatrix}
+	\]\\
+	\\
+	\subsubsection{Proof of the Theorem}
+	Theorem:
+	if $\lambda$ is an eigenvalue of $A$, $e^\lambda$ is an eigenvalue of $e^A$; this accounts for all the eigenvalues of $e^A$.\\
+	\\
+	So take \( \lambda_1 \) and \( \lambda_2 \) to be the eigenvalues of \( A \), then the eigenvalues of \( e^A \) are \( e^{\lambda_1} \) and \( e^{\lambda_2} \).\\
+	Therefore, we require:
+	
+	\[
+	e^{\lambda_1} = -1 \quad \text{and} \quad e^{\lambda_2} = -4
+	\]
+	
+	
+	Thus:
+	\[
+	\lambda_1 = (2k+1)\pi i \quad \text{for} \quad k \in \mathbb{Z}
+	\]
+	\[
+	\lambda_2 = 2\log2 + (2k+1)\pi i \quad \text{for} \quad k \in \mathbb{Z}
+	\]
+	\\
+	For any real matrix \( A \), the eigenvalues must either be real or come in complex conjugate pairs. However, this is not the case.
+	\\
+	\phantom{a}\hfill$\blacksquare$
+	\newpage
+	\begin{thebibliography}{99}
+		
+		\bibitem{stewart}
+		James Stewart, 
+		\emph{Calculus: Early Transcendentals}, 
+		8th ed., Cengage Learning, 2016.
+		
+		\bibitem{apostol}
+		Tom M. Apostol, 
+		\emph{Calculus, Volume 1: One-Variable Calculus with an Introduction to Linear Algebra}, 
+		2nd ed., Wiley, 1967.
+		
+		\bibitem{hardy}
+		G. H. Hardy and E. M. Wright, 
+		\emph{An Introduction to the Theory of Numbers}, 
+		6th ed., Oxford University Press, 2008.
+		
+	\end{thebibliography}
+	% --------------------------------------------------------------
+	%     You don't have to mess with anything below this line.
+	% --------------------------------------------------------------
+	
+\end{document}
